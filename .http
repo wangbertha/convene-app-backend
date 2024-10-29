@@ -1,0 +1,24 @@
+@host = http://localhost:3000
+
+### 1. Register New User
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "email": "user@123.com",
+  "password": "123",
+  "firstname": "name",
+  "bio": "bio bio bio",
+  "city": "Atlanta",
+  "state": "GA"
+}
+
+### 2. Login User
+# @name login
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "email": "user@123.com",
+  "password": "123"
+}
