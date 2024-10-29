@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int     @id @default(autoincrement())
+  email            String  @unique
+  password         String
+  firstname        String
+  lastname         String?
+  profilePicture   String?
+  bio              String
+  city             String
+  state            String
+  age              Int?
+  gender           String?
+  genderPreference String?
+  lookingFor       String?
+  profileActive    Boolean @default(true)
+
+  attendingEvents Event[]
+
+  interests Interest[]
+
+  connectToUsers   User[] @relation("ConnectedUsers")
+  connectFromUsers User[] @relation("ConnectedUsers")
+
+  notConnectToUsers   User[] @relation("NotConnectedUsers")
+  notConnectFromUsers User[] @relation("NotConnectedUsers")
+}
+
+model Interest {
+  id       Int    @id @default(autoincrement())
+  interest String @unique
+  users    User[]
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  name      String
+  logo      String?
+  startTime DateTime
+  endTime   DateTime
+  venue     String
+  summary   String
+  url       String   @unique
+  category  String
+
+  attendingUsers User[]
+}
