@@ -27,6 +27,42 @@ router
     }
   })
   //AUTH update event:id (add attendees)
-  .put(authenticate, async (req, res, next) => {
-    //TODO: update event for attendees
+  .post(authenticate, async (req, res, next) => {
+    //post current user to attendingUser
+    try {
+      const event = await prisma.event.update({
+        where: {
+          id: req.body.eventId,
+        },
+        data: {
+          attendingUsers: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
+  })
+
+  //remove current user from attendingUser
+  .post(authenticate, async (req, res, next) => {
+    try {
+      const event = await prisma.event.update({
+        where: {
+          id: req.body.eventId,
+        },
+        data: {
+          attendingUsers: {
+            disconnect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    } catch (e) {
+      next(e);
+    }
   });
