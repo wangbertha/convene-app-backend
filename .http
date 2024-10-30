@@ -7,10 +7,7 @@ Content-Type: application/json
 {
   "email": "user@123.com",
   "password": "123",
-  "firstname": "name",
-  "bio": "bio bio bio",
-  "city": "Atlanta",
-  "state": "GA"
+  "firstname": "name"
 }
 
 ### 2. Login User

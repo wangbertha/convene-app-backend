@@ -11,6 +11,9 @@ function createToken(id) {
     return jwt.sign({ id }, JWT_SECRET, { expiresIn: "1d" });
 }
 
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // token checking middleware
 router.use(async (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -34,22 +37,35 @@ router.use(async (req, res, next) => {
 
 // register new user
 router.post("/register", async (req, res, next) => {
+    const { email, password, firstname } = req.body;
     try {
-        const { email, password, firstname, bio, city, state } = req.body;
-
         if (!email || !password) {
-            return res.status(400).json({ error: "email and password are required." });
+            return next({ status: 400, message: "email and password are required." });
+        }
+
+        if (!firstname) {
+            return next({ status: 400, message: "firstname is required." });
         }
         
         if (email.trim() === "" || password.trim() === "") {
-            return res.status(400).json({ error: "email and password cannot be empty." });
+            return next({
+                status: 400,
+                message: "email and password cannot be empty.",
+            });
+        }
+
+        if (!emailRegex.test(email)) {
+            return next({ status: 400, message: "email format is invalid." });
         }
 
         if (email.includes(" ") || password.includes(" ")) {
-            return res.status(400).json({ error: "email and password cannot contain spaces." });
+            return next({
+                status: 400,
+                message: "email and password cannot contain spaces.",
+            });
         }
 
-        const user = await prisma.user.register(email, password, firstname, bio, city, state);
+        const user = await prisma.user.register(email, password, firstname);
         const token = createToken(user.id);
         res.status(201).json({ token })
     } catch (e) {
@@ -63,15 +79,25 @@ router.post("/login", async (req, res, next) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ error: "email and password are required." });
+            return next({ status: 400, message: "email and password are required." });
+        }
+
+        if (!emailRegex.test(email)) {
+            return next({ status: 400, message: "email format is invalid." });
         }
         
         if (email.trim() === "" || password.trim() === "") {
-            return res.status(400).json({ error: "email and password cannot be empty." });
+            return next({
+                status: 400,
+                message: "email and password cannot be empty.",
+            });
         }
 
         if (email.includes(" ") || password.includes(" ")) {
-            return res.status(400).json({ error: "email and password cannot contain spaces." });
+            return next({
+                status: 400,
+                message: "email and password cannot contain spaces.",
+            });
         }
 
         const user = await prisma.user.login(email, password);

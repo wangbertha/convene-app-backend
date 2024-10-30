@@ -6,9 +6,9 @@ CREATE TABLE "User" (
     "firstname" TEXT NOT NULL,
     "lastname" TEXT,
     "profilePicture" TEXT,
-    "bio" TEXT NOT NULL,
-    "city" TEXT NOT NULL,
-    "state" TEXT NOT NULL,
+    "bio" TEXT,
+    "city" TEXT,
+    "state" TEXT,
     "age" INTEGER,
     "gender" TEXT,
     "genderPreference" TEXT,
@@ -39,6 +39,19 @@ CREATE TABLE "Event" (
     "category" TEXT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Chat" (
+    "id" SERIAL NOT NULL,
+    "senderId" INTEGER NOT NULL,
+    "receiverId" INTEGER NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isRead" BOOLEAN NOT NULL DEFAULT false,
+    "messageType" TEXT NOT NULL,
+
+    CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -97,6 +110,12 @@ CREATE UNIQUE INDEX "_EventToUser_AB_unique" ON "_EventToUser"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_EventToUser_B_index" ON "_EventToUser"("B");
+
+-- AddForeignKey
+ALTER TABLE "Chat" ADD CONSTRAINT "Chat_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Chat" ADD CONSTRAINT "Chat_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ConnectedUsers" ADD CONSTRAINT "_ConnectedUsers_A_fkey" FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
