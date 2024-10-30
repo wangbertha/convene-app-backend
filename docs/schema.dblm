@@ -17,7 +17,7 @@ Table User {
   profileActive            boolean [default: true]
   interests Interest[]
   attendingEvents Event[]
-    receivedChats            Chat[]    
+  receivedChats            Chat[]    
   sentChats                Chat[]    
   connectToUsers   User[]
   connectFromUsers User[] 
