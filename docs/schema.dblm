@@ -19,10 +19,11 @@ Table User {
   attendingEvents Event[]
     receivedChats            Chat[]    
   sentChats                Chat[]    
-  User_ConnectedUsers_A    User[]    
-  User_ConnectedUsers_B    User[]    
-  User_NotConnectedUsers_A User[]    
-  User_NotConnectedUsers_B User[]    
+  connectToUsers   User[]
+  connectFromUsers User[] 
+
+  notConnectToUsers   User[]
+  notConnectFromUsers User[]    
 }
 
 Table Interest {
