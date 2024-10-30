@@ -19,3 +19,86 @@ Content-Type: application/json
   "email": "user@123.com",
   "password": "123"
 }
+### token 
+@token = {{login.response.body.token}}
+
+### 3. GET users 
+GET {{host}}/users
+
+### 4. GET user by ID
+GET {{host}}/users/101
+
+### 5. PATCH uset by ID
+PATCH {{host}}/users/101
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstname": "JohnFirstnameUpdate",
+  "bio": "Updated bio for the user.",
+  "city": "New City"
+}
+
+### 6. GET user by Invalid ID
+GET {{host}}/users/invalid_id
+
+### 7. GET user by Non-Existent ID
+GET {{host}}/users/99999
+
+
+### 8. PATCH user by Invalid ID
+PATCH {{host}}/users/invalid_id
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstname": "InvalidUpdate"
+}
+
+### 9. PATCH user without Authorization
+PATCH {{host}}/users/101
+Content-Type: application/json
+
+{
+  "firstname": "UnauthorizedUpdate"
+}
+
+### 10. DELETE user by ID
+DELETE {{host}}/users/101
+Authorization: Bearer {{token}}
+
+### 11. DELETE user without Authorization
+DELETE {{host}}/users/101
+
+### 12. DELETE Non-Existent User
+DELETE {{host}}/users/99999
+Authorization: Bearer {{token}}
+
+### 13. Register User with Existing Email
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "email": "user@123.com",
+  "password": "123",
+  "firstname": "DuplicateUser"
+}
+
+### 14. Register User with Missing Fields
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "email": "user@missingfields.com",
+  "password": "123"
+  // Missing "firstname"
+}
+
+### 15. Login with Incorrect Password
+POST {{host}}/login
+Content-Type: application/json
+
+{
+  "email": "user@123.com",
+  "password": "wrongpassword"
+}
