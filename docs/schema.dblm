@@ -1,0 +1,66 @@
+// This is a dbml diagram for the provided Prisma schema
+
+Table User {
+  id                       int   [pk, increment] // Primary key, autoincrement
+  email                    string [unique] // Unique email
+  password                 string
+  firstname                string
+  lastname                 string
+  profilePicture           string
+  bio                      string
+  city                     string
+  state                    string
+  age                      int
+  gender                   string
+  genderPreference         string
+  lookingFor               string
+  profileActive            boolean [default: true]
+  interests Interest[]
+  attendingEvents Event[]
+    receivedChats            Chat[]    
+  sentChats                Chat[]    
+  User_ConnectedUsers_A    User[]    
+  User_ConnectedUsers_B    User[]    
+  User_NotConnectedUsers_A User[]    
+  User_NotConnectedUsers_B User[]    
+}
+
+Table Interest {
+  id       int   [pk, increment] // Primary key, autoincrement
+  interest string [unique] // Unique interest
+  users User[]
+}
+
+Table Event {
+  id             int      [pk, increment] // Primary key, autoincrement
+  name           string
+  logo           string
+  startTime      datetime
+  endTime        datetime
+  venue          string
+  summary        string
+  url            string [unique] // Unique URL
+  category       string
+  users User[]
+}
+
+Table Chat {
+  id          int      [pk, increment] // Primary key, autoincrement
+  senderId    int
+  receiverId  int
+  content     string
+  createdAt   datetime  // Default current date/time
+  isRead      boolean [default: false] // Default read status
+  messageType string
+    receiver    User  
+  sender      User  
+}
+
+
+Ref: "User"."interests" <> "Interest"."users"
+
+Ref: "User"."attendingEvents" <> "Event"."users"
+
+Ref: "Chat"."receiver" < "User"."receivedChats"
+
+Ref: "Chat"."sender" < "User"."sentChats"
