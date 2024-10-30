@@ -8,66 +8,57 @@ datasource db {
 }
 
 model User {
-  id               Int     @id @default(autoincrement())
-  email            String  @unique
-  password         String
-  firstname        String
-  lastname         String?
-  profilePicture   String?
-  bio              String
-  city             String
-  state            String
-  age              Int?
-  gender           String?
-  genderPreference String?
-  lookingFor       String?
-  profileActive    Boolean @default(true)
-
-  attendingEvents Event[]
-
-  interests Interest[]
-
-  connectToUsers   User[] @relation("ConnectedUsers")
-  connectFromUsers User[] @relation("ConnectedUsers")
-
-  notConnectToUsers   User[] @relation("NotConnectedUsers")
-  notConnectFromUsers User[] @relation("NotConnectedUsers")
-
-  sentChats     Chat[] @relation("Sender")
-  receivedChats Chat[] @relation("Receiver")
+  id                       Int        @id @default(autoincrement())
+  email                    String     @unique
+  password                 String
+  firstname                String
+  lastname                 String?
+  profilePicture           String?
+  bio                      String
+  city                     String
+  state                    String
+  age                      Int?
+  gender                   String?
+  genderPreference         String?
+  lookingFor               String?
+  profileActive            Boolean    @default(true)
+  receivedChats            Chat[]     @relation("Receiver")
+  sentChats                Chat[]     @relation("Sender")
+  User_ConnectedUsers_A    User[]     @relation("ConnectedUsers")
+  User_ConnectedUsers_B    User[]     @relation("ConnectedUsers")
+  attendingEvents          Event[]    @relation("EventToUser")
+  interests                Interest[] @relation("InterestToUser")
+  User_NotConnectedUsers_A User[]     @relation("NotConnectedUsers")
+  User_NotConnectedUsers_B User[]     @relation("NotConnectedUsers")
 }
 
 model Interest {
   id       Int    @id @default(autoincrement())
   interest String @unique
-  users    User[]
+  users    User[] @relation("InterestToUser")
 }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  name      String
-  logo      String?
-  startTime DateTime
-  endTime   DateTime
-  venue     String
-  summary   String
-  url       String   @unique
-  category  String
-
-  attendingUsers User[]
+  id             Int      @id @default(autoincrement())
+  name           String
+  logo           String?
+  startTime      DateTime
+  endTime        DateTime
+  venue          String
+  summary        String
+  url            String   @unique
+  category       String
+  attendingUsers User[]   @relation("EventToUser")
 }
 
 model Chat {
-  id Int @id @default(autoincrement())
-
-  sender   User @relation("Sender", fields: [senderId], references: [id])
-  senderId Int
-
-  receiver   User @relation("Receiver", fields: [receiverId], references: [id])
-  receiverId Int
-
+  id          Int      @id @default(autoincrement())
+  senderId    Int
+  receiverId  Int
   content     String
   createdAt   DateTime @default(now())
   isRead      Boolean  @default(false)
   messageType String
+  receiver    User     @relation("Receiver", fields: [receiverId], references: [id])
+  sender      User     @relation("Sender", fields: [senderId], references: [id])
 }
