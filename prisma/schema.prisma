@@ -14,9 +14,9 @@ model User {
   firstname        String
   lastname         String?
   profilePicture   String?
-  bio              String
-  city             String
-  state            String
+  bio              String?
+  city             String?
+  state            String?
   age              Int?
   gender           String?
   genderPreference String?
