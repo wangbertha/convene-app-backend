@@ -53,7 +53,7 @@ Table Chat {
   createdAt   datetime  // Default current date/time
   isRead      boolean [default: false] // Default read status
   messageType string
-    receiver    User  
+  receiver    User  
   sender      User  
 }
 
