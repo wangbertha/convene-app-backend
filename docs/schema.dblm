@@ -15,14 +15,14 @@ Table User {
   genderPreference         string
   lookingFor               string
   profileActive            boolean [default: true]
-  interests Interest[]
-  attendingEvents Event[]
-    receivedChats            Chat[]    
+  interests                Interest[]
+  attendingEvents          Event[]
+  receivedChats            Chat[]    
   sentChats                Chat[]    
-  User_ConnectedUsers_A    User[]    
-  User_ConnectedUsers_B    User[]    
-  User_NotConnectedUsers_A User[]    
-  User_NotConnectedUsers_B User[]    
+  connectToUsers           User[]    
+  connectFromUsers         User[]    
+  notConnectToUsers        User[] 
+  notConnectFromUsers      User[]    
 }
 
 Table Interest {
@@ -52,7 +52,7 @@ Table Chat {
   createdAt   datetime  // Default current date/time
   isRead      boolean [default: false] // Default read status
   messageType string
-    receiver    User  
+  receiver    User  
   sender      User  
 }
 

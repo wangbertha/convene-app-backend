@@ -33,7 +33,7 @@ const interests = [
 ];
 
 /**
- * function to select random unique interests
+ * function to select random unique interests or events
  * @param {Array} element - array of interests or events
  * @param {number} count - the max number of default interests or events
  * @returns {Array}  array of randomly selected interests or events
