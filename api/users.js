@@ -5,6 +5,9 @@ const { authenticate } = require("./auth");
 
 module.exports = router;
 
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 router.get("/", async (req, res, next) => {
     try {
         const users = await prisma.user.findMany({
@@ -57,14 +60,6 @@ router.get("/:id", async (req, res, next) => {
 router.patch("/:id", authenticate, async (req, res, next) => {
     const { id } = req.params;
 
-    if (isNaN(id)) {
-        return next({ status: 400, message: "Invalid user ID" });
-    }
-
-    if (req.user.id !== +id) {
-        return next({ status: 403, message: "Forbidden" });
-    }
-
     const { 
         email, 
         firstname, 
@@ -79,6 +74,50 @@ router.patch("/:id", authenticate, async (req, res, next) => {
         lookingFor, 
         profileActive 
     } = req.body;
+
+    // check validation for user by id.
+    if (isNaN(id)) {
+        return next({ status: 400, message: "Invalid user ID" });
+    }
+
+    if (req.user.id !== +id) {
+        return next({ status: 403, message: "Forbidden" });
+    }
+
+    // email check validation
+    if (!email) {
+        return next({ status: 400, message: "email and is required." });
+    }
+
+    if (email.trim() === "") {
+        return next({
+            status: 400,
+            message: "email cannot be empty.",
+        });
+    }
+
+    if (email.includes(" ")) {
+        return next({
+            status: 400,
+            message: "email cannot contain spaces.",
+        });
+    }
+
+    if (!emailRegex.test(email)) {
+        return next({ status: 400, message: "email format is invalid." });
+    }
+
+    // firstname check validation
+    if (!firstname) {
+        return next({ status: 400, message: "firstname is required." });
+    }
+
+    if (firstname.trim() === "") {
+        return next({
+            status: 400,
+            message: "firstname cannot be empty.",
+        });
+    }
 
     try {
         const user = await prisma.user.update({
@@ -119,6 +158,33 @@ router.delete("/:id", authenticate, async (req, res, next) => {
         });
         res.sendStatus(204);
     } catch (e) {
+        console.error(e);
+        next(e);
+    }
+});
+
+router.patch("/:id/password", authenticate, async (req, res, next) => {
+    const { id } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    if (req.user.id !== +id) {
+        return next({ status: 403, message: "Forbidden" });
+    }
+
+    if (!currentPassword || !newPassword) {
+        return new({
+            status: 400,
+            message: "Both current and new passwords are required."
+        });
+    }
+
+    try {
+        const updatedUser = await prisma.user.updatePassword(+id, currentPassword, newPassword);
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (e) {
+        if (e.message === "Current password is incorrect.") {
+            return next({ status: 400, message: e.message });
+        }
         console.error(e);
         next(e);
     }
