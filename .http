@@ -19,6 +19,7 @@ Content-Type: application/json
   "email": "user@123.com",
   "password": "123"
 }
+
 ### token 
 @token = {{login.response.body.token}}
 
@@ -102,3 +103,16 @@ Content-Type: application/json
   "email": "user@123.com",
   "password": "wrongpassword"
 }
+
+
+### GET interests
+GET {{host}}/interests
+
+### POST interests
+POST {{host}}/interests
+Content-Type: application/json
+
+{
+  "interest": "Running"
+}
+
