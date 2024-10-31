@@ -31,6 +31,26 @@ const prisma = new PrismaClient().$extends({
                     throw e;
                 }
             },
+            async updatePassword(id, currentPassword, newPassword) {
+                try {
+                    const user = await prisma.user.findUniqueOrThrow({
+                        where: { id },
+                    });
+                    const valid = await bcrypt.compare(currentPassword, user.password);
+                    if (!valid) {
+                        throw new Error("Current password is incorrect.");
+                    }
+
+                    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+                    const updatedUser = await prisma.user.update({
+                        where: { id },
+                        data: { password: hashedNewPassword },
+                    });
+                    return updatedUser;
+                } catch (e) {
+                    throw e;
+                }
+            },
         }
     }
 })

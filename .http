@@ -5,7 +5,7 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "email": "user3@123.com",
+  "email": "user@123.com",
   "password": "123",
   "firstname": "name"
 }
@@ -16,7 +16,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "user3@123.com",
+  "email": "user@123.com",
   "password": "123"
 }
 
@@ -105,6 +105,17 @@ Content-Type: application/json
 }
 
 
+### 16. Update Password Test Case
+PATCH http://localhost:3000/users/101/password
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "currentPassword": "123",
+    "newPassword": "321"
+}
+
+
 ### GET interests
 GET {{host}}/interests
 
@@ -115,8 +126,6 @@ Content-Type: application/json
 {
   "interest": "Running"
 }
-
-
 
 ### GET events
 GET {{host}}/events
@@ -135,4 +144,13 @@ Authorization: Bearer {{token}}
 @token = {{login.response.body.token}}
 DELETE  {{host}}/events/2/attendingUsers
 Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
+
 
