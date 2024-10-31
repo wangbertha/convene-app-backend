@@ -116,8 +116,6 @@ Content-Type: application/json
   "interest": "Running"
 }
 
-
-
 ### GET events
 GET {{host}}/events
 
@@ -135,4 +133,12 @@ Authorization: Bearer {{token}}
 @token = {{login.response.body.token}}
 DELETE  {{host}}/events/2/attendingUsers
 Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
 

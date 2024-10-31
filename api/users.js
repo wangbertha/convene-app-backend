@@ -172,7 +172,7 @@ router.patch("/:id/password", authenticate, async (req, res, next) => {
     }
 
     if (!currentPassword || !newPassword) {
-        return new({
+        return next({
             status: 400,
             message: "Both current and new passwords are required."
         });
