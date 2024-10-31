@@ -16,53 +16,62 @@ router.get("/", async (req, res, next) => {
 });
 
 //event:id routes
-router
-  .route("/:id")
-  //get event:id
-  .get(async (req, res, next) => {
-    try {
-      res.json(req.event);
-    } catch (e) {
-      next(e);
-    }
-  })
-  //AUTH update event:id (add attendees)
-  .post(authenticate, async (req, res, next) => {
-    //post current user to attendingUser
-    try {
-      const event = await prisma.event.update({
-        where: {
-          id: req.body.eventId,
-        },
-        data: {
-          attendingUsers: {
-            connect: {
-              id: user.id,
-            },
-          },
-        },
-      });
-    } catch (e) {
-      next(e);
-    }
-  })
+router.get("/:id/", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const event = await prisma.event.findUniqueOrThrow({
+      where: { id: +id },
+      include: { attendingUsers: true },
+    });
+    res.json(event);
+  } catch (e) {
+    next(e);
+  }
+});
+//AUTH update event:id (add attendees)
 
-  //remove current user from attendingUser
-  .post(authenticate, async (req, res, next) => {
-    try {
-      const event = await prisma.event.update({
-        where: {
-          id: req.body.eventId,
-        },
-        data: {
-          attendingUsers: {
-            disconnect: {
-              id: user.id,
-            },
+router.post("/:id/attendingUsers", authenticate, async (req, res, next) => {
+  //post current user to attendingUser
+  const { id } = req.params;
+  //const { userId } = req.user.id;
+  try {
+    //const user = userId.map((id) => ({ id }));
+    const event = await prisma.event.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        attendingUsers: {
+          connect: {
+            id: req.user.id,
           },
         },
-      });
-    } catch (e) {
-      next(e);
-    }
-  });
+      },
+    });
+    res.status(201).json(event);
+  } catch (e) {
+    next(e);
+  }
+});
+
+//remove current user from attendingUser
+router.delete("/:id/attendingUsers", authenticate, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const event = await prisma.event.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        attendingUsers: {
+          disconnect: {
+            id: req.user.id,
+          },
+        },
+      },
+    });
+    res.status(200).json(event);
+  } catch (e) {
+    next(e);
+  }
+});
