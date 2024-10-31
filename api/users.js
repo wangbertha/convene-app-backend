@@ -85,38 +85,35 @@ router.patch("/:id", authenticate, async (req, res, next) => {
     }
 
     // email check validation
-    if (!email) {
-        return next({ status: 400, message: "email and is required." });
-    }
+    
+    if (email !== undefined) {
+        if (email.trim() === "") {
+            return next({
+                status: 400,
+                message: "email cannot be empty.",
+            });
+        }
 
-    if (email.trim() === "") {
-        return next({
-            status: 400,
-            message: "email cannot be empty.",
-        });
-    }
+        if (email.includes(" ")) {
+            return next({
+                status: 400,
+                message: "email cannot contain spaces.",
+            });
+        }
 
-    if (email.includes(" ")) {
-        return next({
-            status: 400,
-            message: "email cannot contain spaces.",
-        });
-    }
-
-    if (!emailRegex.test(email)) {
-        return next({ status: 400, message: "email format is invalid." });
+        if (!emailRegex.test(email)) {
+            return next({ status: 400, message: "email format is invalid." });
+        }
     }
 
     // firstname check validation
-    if (!firstname) {
-        return next({ status: 400, message: "firstname is required." });
-    }
-
-    if (firstname.trim() === "") {
-        return next({
-            status: 400,
-            message: "firstname cannot be empty.",
-        });
+    if (firstname !== undefined) {
+        if (firstname.trim() === "") {
+            return next({
+                status: 400,
+                message: "firstname cannot be empty.",
+            });
+        }
     }
 
     try {

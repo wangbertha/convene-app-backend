@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const { PrismaClient } = require("@prisma/client");
-const { use } = require("../api/users");
 const prisma = new PrismaClient().$extends({
     model: {
         user: {
