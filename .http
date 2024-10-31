@@ -5,7 +5,7 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "email": "user@123.com",
+  "email": "user3@123.com",
   "password": "123",
   "firstname": "name"
 }
@@ -16,7 +16,7 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "user@123.com",
+  "email": "user3@123.com",
   "password": "123"
 }
 
@@ -115,4 +115,24 @@ Content-Type: application/json
 {
   "interest": "Running"
 }
+
+
+
+### GET events
+GET {{host}}/events
+
+### GET events/:id
+GET {{host}}/events/2
+
+###POST attending
+@token = {{login.response.body.token}}
+POST {{host}}/events/2/attendingUsers
+Authorization: Bearer {{token}}
+
+
+
+###POST not attending
+@token = {{login.response.body.token}}
+DELETE  {{host}}/events/2/attendingUsers
+Authorization: Bearer {{token}}
 
