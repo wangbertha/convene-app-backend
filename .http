@@ -26,6 +26,10 @@ Content-Type: application/json
 ### 3. GET users 
 GET {{host}}/users
 
+### GET logged-in user
+GET {{host}}/users/me
+Authorization: Bearer {{token}}
+
 ### 4. GET user by ID
 GET {{host}}/users/101
 
