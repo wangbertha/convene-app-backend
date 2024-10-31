@@ -11,9 +11,6 @@ app.use(require("morgan")("dev"));
 app.use(express.json());
 
 app.use(require("./api/auth").router);
-
-app.use("/users", require("./api/users"));
-
 app.use("/interests", require("./api/interests"));
 app.use("/events", require("./api/events"));
 app.use("/users", require("./api/users"));
