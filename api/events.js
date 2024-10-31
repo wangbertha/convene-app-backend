@@ -32,10 +32,10 @@ router.get("/:id/", async (req, res, next) => {
 });
 //AUTH update event:id (add attendees)
 
-router.post("/:id/attendingUsers", authenticate, async (req, res, next) => {
-  //post current user to attendingUser
+router.patch("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
-  //const { userId } = req.user.id;
+  const { attending } = req.body;
+
   try {
     //const user = userId.map((id) => ({ id }));
     const event = await prisma.event.update({
@@ -43,11 +43,17 @@ router.post("/:id/attendingUsers", authenticate, async (req, res, next) => {
         id: +id,
       },
       data: {
-        attendingUsers: {
-          connect: {
-            id: req.user.id,
-          },
-        },
+        attendingUsers: attending
+          ? {
+              connect: {
+                id: req.user.id,
+              },
+            }
+          : {
+              disconnect: {
+                id: req.user.id,
+              },
+            },
       },
     });
     res.status(201).json(event);
