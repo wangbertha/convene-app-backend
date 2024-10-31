@@ -29,6 +29,17 @@ router.get("/", async (req, res, next) => {
     }
 });
 
+router.get("/me", authenticate, async (req, res, next) => {
+    try {
+        const user = await prisma.user.findUniqueOrThrow({
+            where: { id: req.user.id }
+        });
+        res.json(user);
+    } catch (e) {
+        next(e);
+    }
+});
+
 router.get("/:id", async (req, res, next) => {
     const { id } = req.params;
 
