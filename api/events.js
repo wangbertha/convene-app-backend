@@ -8,7 +8,9 @@ const { authenticate } = require("./auth");
 //get all events
 router.get("/", async (req, res, next) => {
   try {
-    const events = await prisma.event.findMany();
+    const events = await prisma.event.findMany({
+      include: { attendingUsers: true },
+    });
     res.json(events);
   } catch (e) {
     next(e);
