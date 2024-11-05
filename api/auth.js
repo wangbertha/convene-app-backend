@@ -14,27 +14,6 @@ function createToken(id) {
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// token checking middleware
-router.use(async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.slice(7);
-
-  if (!token) {
-    return next();
-  }
-
-  try {
-    const { id } = jwt.verify(token, JWT_SECRET);
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id },
-    });
-    req.user = user;
-    next();
-  } catch (e) {
-    next(e);
-  }
-});
-
 // register new user
 router.post("/register", async (req, res, next) => {
   const { email, password, firstname } = req.body;
@@ -103,6 +82,27 @@ router.post("/login", async (req, res, next) => {
     const user = await prisma.user.login(email, password);
     const token = createToken(user.id);
     res.json({ token });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// token checking middleware
+router.use(async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.slice(7);
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const { id } = jwt.verify(token, JWT_SECRET);
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id },
+    });
+    req.user = user;
+    next();
   } catch (e) {
     next(e);
   }
