@@ -1,9 +1,15 @@
 const express = require("express");
-const app = express();
-const PORT = 3000;
+const { createServer } = require("http");
+const socketIo = require("socket.io");
 require("dotenv").config();
 
-//cors
+const app = express();
+const server = createServer(app);
+const io = socketIo(server); // Initialize socket.io with the HTTP server
+
+const PORT = process.env.PORT || 3000;
+
+// cors
 const cors = require("cors");
 app.use(cors({ origin: /localhost/ }));
 
@@ -25,6 +31,16 @@ app.use((err, req, res, next) => {
   res.json(err.message ?? "Sorry, something broke :(");
 });
 
-app.listen(PORT, () => {
+// Socket.io connection handling
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
+
+// Start server with socket.io
+server.listen(PORT, () => {
   console.log(`Listening on port ${PORT}...`);
 });
