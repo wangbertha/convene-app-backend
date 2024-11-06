@@ -133,25 +133,22 @@ router.patch("/me", authenticate, async (req, res, next) => {
         const user = await prisma.user.update({
             where: { id: req.user.id },
             data: {
-                // using "spread operator" and the "logical AND" to add variable if "truthy"
-                ...(email && { email }),
-                ...(firstname && { firstname }),
-                ...(lastname && { lastname }),
-                ...(profilePicture && { profilePicture }),
-                ...(bio && { bio }),
-                ...(city && { city }),
-                ...(state && { state }),
-                ...(age !== undefined && { age: +age }),  // allow 0 or null for age if desired
-                ...(gender && { gender }),
-                ...(genderPreference && { genderPreference }),
-                ...(lookingFor && { lookingFor }),
-                ...(profileActive && { profileActive }),
-                ...(interestToConnect && { interests: {
-                    connect: [{ id: interestToConnect.id }]
-                } }),
-                ...(interestToDisconnect && { interests: {
-                    disconnect: [{ id: interestToDisconnect.id }]
-                } }),
+                email,
+                firstname,
+                lastname,
+                profilePicture,
+                bio,
+                city,
+                state,
+                age: +age,
+                gender,
+                genderPreference,
+                lookingFor,
+                profileActive,
+                interests: {
+                    ...(interestToConnect && {connect: [{ id: interestToConnect.id }]}),
+                    ...(interestToDisconnect && {disconnect: [{ id: interestToDisconnect.id }]}),
+                },
             },
         });
         res.status(200).json(user);
