@@ -8,8 +8,8 @@ const { authenticate } = require("./auth");
 //get all events
 router.get("/", async (req, res, next) => {
   try {
-    const events = await prisma.event.findMany({
-      include: { attendingUsers: true },
+    const events = await prisma.activity.findMany({
+      include: { users: true },
     });
     res.json(events);
   } catch (e) {
@@ -18,12 +18,12 @@ router.get("/", async (req, res, next) => {
 });
 
 //event:id routes
-router.get("/:id/", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const event = await prisma.event.findUniqueOrThrow({
+    const event = await prisma.activity.findUniqueOrThrow({
       where: { id: +id },
-      include: { attendingUsers: true },
+      include: { users: true },
     });
     res.json(event);
   } catch (e) {
@@ -34,16 +34,16 @@ router.get("/:id/", async (req, res, next) => {
 
 router.patch("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
-  const { attending } = req.body;
+  const { saved } = req.body;
 
   try {
     //const user = userId.map((id) => ({ id }));
-    const event = await prisma.event.update({
+    const event = await prisma.activity.update({
       where: {
         id: +id,
       },
       data: {
-        attendingUsers: attending
+        users: saved
           ? {
               connect: {
                 id: req.user.id,
@@ -66,7 +66,7 @@ router.patch("/:id", authenticate, async (req, res, next) => {
 router.delete("/:id/attendingUsers", authenticate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const event = await prisma.event.update({
+    const event = await prisma.activity.update({
       where: {
         id: +id,
       },

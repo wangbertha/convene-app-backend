@@ -149,13 +149,3 @@ Authorization: Bearer {{token}}
 @token = {{login.response.body.token}}
 DELETE  {{host}}/events/2/attendingUsers
 Authorization: Bearer {{token}}
-
-
-
-
-
-
-
-
-
-
