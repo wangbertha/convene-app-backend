@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
       include: {
-        attendingEvents: true,
+        activities: true,
         interests: true,
         connectToUsers: true,
         connectFromUsers: true,
@@ -35,7 +35,7 @@ router.get("/me", authenticate, async (req, res, next) => {
       where: { id: req.user.id },
       include: {
         interests: true,
-        attendingEvents: true,
+        activities: true,
         connectToUsers: true,
         connectFromUsers: true,
         notConnectToUsers: true,
@@ -60,7 +60,7 @@ router.get("/:id", authenticate, async (req, res, next) => {
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: +id },
       include: {
-        attendingEvents: true,
+        activities: true,
         interests: true,
         connectToUsers: true,
         connectFromUsers: true,
