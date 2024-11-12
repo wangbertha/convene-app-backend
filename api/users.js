@@ -8,6 +8,7 @@ module.exports = router;
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+//get all users
 router.get("/", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
@@ -27,6 +28,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+//get logged in user info
 router.get("/me", authenticate, async (req, res, next) => {
   try {
     const user = await prisma.user.findUniqueOrThrow({
@@ -46,7 +48,8 @@ router.get("/me", authenticate, async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+//get other user info
+router.get("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   if (isNaN(id)) {
@@ -72,6 +75,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+//update logged in user info
 router.patch("/me", authenticate, async (req, res, next) => {
   const {
     email,
@@ -153,6 +157,7 @@ router.patch("/me", authenticate, async (req, res, next) => {
   }
 });
 
+//delete own profile
 router.delete("/me", authenticate, async (req, res, next) => {
   try {
     await prisma.user.delete({
@@ -165,6 +170,7 @@ router.delete("/me", authenticate, async (req, res, next) => {
   }
 });
 
+//update password
 router.patch("/me/password", authenticate, async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -186,6 +192,43 @@ router.patch("/me/password", authenticate, async (req, res, next) => {
     if (e.message === "Current password is incorrect.") {
       return next({ status: 400, message: e.message });
     }
+    console.error(e);
+    next(e);
+  }
+});
+
+//GET logged in user interests for suggestion component
+router.get("/me/interests", authenticate, async (req, res, next) => {
+  try {
+    const myInterests = prisma.user.findUniqueOrThrow({
+      where: { id: req.user.id },
+      include: {
+        interests: true,
+      },
+    });
+    res.json(myInterests.interests);
+  } catch (e) {
+    next(e);
+  }
+});
+
+//GET other user interests
+router.get("/:id/interests", authenticate, async (req, res, next) => {
+  const { id } = req.params;
+
+  if (isNaN(id)) {
+    return next({ status: 400, message: "Invalid user ID" });
+  }
+
+  try {
+    const userInterests = await prisma.user.findUniqueOrThrow({
+      where: { id: +id },
+      include: {
+        interests: true,
+      },
+    });
+    res.json(userInterests.interests);
+  } catch (e) {
     console.error(e);
     next(e);
   }
