@@ -23,7 +23,7 @@ model User {
   lookingFor       String?
   profileActive    Boolean @default(true)
 
-  attendingEvents Event[]
+  activities Activity[]
 
   interests Interest[]
 
@@ -40,18 +40,16 @@ model Interest {
   users    User[]
 }
 
-model Event {
-  id        Int      @id @default(autoincrement())
-  name      String
-  logo      String?
-  startTime DateTime
-  endTime   DateTime
-  venue     String
-  summary   String
-  url       String   @unique
-  category  String
+model Activity {
+  id           Int      @id @default(autoincrement())
+  name         String
+  logo         String?
+  summary      String
+  locations    String[]
+  urlResources String[]
+  categories   String[]
 
-  attendingUsers User[]
+  users User[]
 }
 
 model Chat {

@@ -1,3 +1,3 @@
 # Convene App Backend
 
-![alt schemaimage](./docs/convene.png)
+![alt schemaimage](./docs/convene_dbml.png)

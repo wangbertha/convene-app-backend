@@ -17,7 +17,7 @@ app.use(express.json());
 //Setup express middleware
 app.use(require("./api/auth").router);
 app.use("/interests", require("./api/interests"));
-app.use("/events", require("./api/events"));
+app.use("/activities", require("./api/activities"));
 app.use("/users", require("./api/users"));
 app.use("/chats", require("./api/chats"));
 app.use("/messages", require("./api/messages"));
