@@ -212,7 +212,7 @@ router.get("/me/interests", authenticate, async (req, res, next) => {
   }
 });
 
-//GET other user info
+//GET other user interests
 router.get("/:id/interests", async (req, res, next) => {
   const { id } = req.params;
 
