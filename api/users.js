@@ -221,13 +221,13 @@ router.get("/:id/interests", async (req, res, next) => {
   }
 
   try {
-    const user = await prisma.user.findUniqueOrThrow({
+    const userInterests = await prisma.user.findUniqueOrThrow({
       where: { id: +id },
       include: {
         interests: true,
       },
     });
-    res.json(user);
+    res.json(userInterests);
   } catch (e) {
     console.error(e);
     next(e);
