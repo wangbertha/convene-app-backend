@@ -26,7 +26,7 @@ app.use(express.json());
 
 app.use(require("./api/auth").router);
 app.use("/interests", require("./api/interests"));
-app.use("/events", require("./api/events"));
+app.use("/activities", require("./api/activities"));
 app.use("/users", require("./api/users"));
 
 app.use((req, res, next) => {
