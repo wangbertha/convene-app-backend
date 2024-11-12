@@ -5,9 +5,9 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "email": "user@123.com",
-  "password": "123",
-  "firstname": "name"
+  "email": "user@gmail.com",
+  "password": "User@123",
+  "firstname": "User New"
 }
 
 ### 2. Login User
@@ -16,8 +16,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "user@123.com",
-  "password": "123"
+  "email": "user@gmail.com",
+  "password": "User@123",
 }
 
 ### token 
@@ -32,7 +32,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ### 4. GET user by ID
-GET {{host}}/users/101
+GET {{host}}/users/102
 
 ### 5. PATCH uset by ID
 PATCH {{host}}/users/101
@@ -149,3 +149,59 @@ Authorization: Bearer {{token}}
 @token = {{login.response.body.token}}
 DELETE  {{host}}/events/2/attendingUsers
 Authorization: Bearer {{token}}
+
+// CHATS ENDPOINTS 
+
+### POST New Chat
+@token = {{login.response.body.token}}
+POST {{host}}/chats 
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstId": 101,
+  "secondId": 102
+}
+
+### GET Specific user chats
+GET {{host}}/chats/user-chats
+Authorization: Bearer {{token}}
+
+### GET Chat between two users
+GET {{host}}/chats 
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "firstId": 101,
+  "secondId": 102
+}
+
+//Messages Endpoints
+
+### POST a message
+
+POST {{host}}/messages 
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "chatId": 1,
+  "senderId": 102,
+  "text": "sdafsafdsfasfdsfsdfsdafdsafdsfsafsdfasfsdafsdfsfsdfsdsf"
+}
+
+### Get all messages from one chat
+
+GET {{host}}/messages/1
+Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
+
+

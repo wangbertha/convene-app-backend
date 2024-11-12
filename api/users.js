@@ -13,14 +13,12 @@ router.get("/", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
       include: {
-        activities: true,
+        attendingEvents: true,
         interests: true,
         connectToUsers: true,
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
       },
     });
     res.status(200).json(users);
@@ -37,13 +35,11 @@ router.get("/me", authenticate, async (req, res, next) => {
       where: { id: req.user.id },
       include: {
         interests: true,
-        activities: true,
+        attendingEvents: true,
         connectToUsers: true,
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
       },
     });
     res.json(user);
@@ -64,14 +60,12 @@ router.get("/:id", async (req, res, next) => {
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: +id },
       include: {
-        activities: true,
+        attendingEvents: true,
         interests: true,
         connectToUsers: true,
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
       },
     });
     res.json(user);
@@ -132,7 +126,6 @@ router.patch("/me", authenticate, async (req, res, next) => {
     }
   }
 
-  //update user information
   try {
     const user = await prisma.user.update({
       where: { id: req.user.id },
