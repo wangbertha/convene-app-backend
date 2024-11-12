@@ -18,9 +18,6 @@ router.get("/", async (req, res, next) => {
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
-        attendingEvents: true,
       },
     });
     res.status(200).json(users);
@@ -35,19 +32,16 @@ router.get("/me", authenticate, async (req, res, next) => {
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: req.user.id },
       include: {
-        attendingEvents: true,
         interests: true,
+        attendingEvents: true,
         connectToUsers: true,
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
       },
     });
-    res.status(200).json(user);
+    res.json(user);
   } catch (e) {
-    console.error(e);
     next(e);
   }
 });
@@ -69,8 +63,6 @@ router.get("/:id", async (req, res, next) => {
         connectFromUsers: true,
         notConnectToUsers: true,
         notConnectFromUsers: true,
-        sentChats: true,
-        receivedChats: true,
       },
     });
     res.json(user);
@@ -80,9 +72,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.patch("/:id", authenticate, async (req, res, next) => {
-  const { id } = req.params;
-
+router.patch("/me", authenticate, async (req, res, next) => {
   const {
     email,
     firstname,
@@ -96,16 +86,9 @@ router.patch("/:id", authenticate, async (req, res, next) => {
     genderPreference,
     lookingFor,
     profileActive,
+    interestToConnect,
+    interestToDisconnect,
   } = req.body;
-
-  // check validation for user by id.
-  if (isNaN(id)) {
-    return next({ status: 400, message: "Invalid user ID" });
-  }
-
-  if (req.user.id !== +id) {
-    return next({ status: 403, message: "Forbidden" });
-  }
 
   // email check validation
 
@@ -141,21 +124,26 @@ router.patch("/:id", authenticate, async (req, res, next) => {
 
   try {
     const user = await prisma.user.update({
-      where: { id: +id },
+      where: { id: req.user.id },
       data: {
-        // using "spread operator" and the "logical AND" to add variable if "truthy"
-        ...(email && { email }),
-        ...(firstname && { firstname }),
-        ...(lastname && { lastname }),
-        ...(profilePicture && { profilePicture }),
-        ...(bio && { bio }),
-        ...(city && { city }),
-        ...(state && { state }),
-        ...(age !== undefined && { age }), // allow 0 or null for age if desired
-        ...(gender && { gender }),
-        ...(genderPreference && { genderPreference }),
-        ...(lookingFor && { lookingFor }),
-        ...(profileActive && { profileActive }),
+        email,
+        firstname,
+        lastname,
+        profilePicture,
+        bio,
+        city,
+        state,
+        age: +age,
+        gender,
+        genderPreference,
+        lookingFor,
+        profileActive,
+        interests: {
+          ...(interestToConnect && { connect: [{ id: interestToConnect.id }] }),
+          ...(interestToDisconnect && {
+            disconnect: [{ id: interestToDisconnect.id }],
+          }),
+        },
       },
     });
     res.status(200).json(user);
@@ -165,16 +153,10 @@ router.patch("/:id", authenticate, async (req, res, next) => {
   }
 });
 
-router.delete("/:id", authenticate, async (req, res, next) => {
-  const { id } = req.params;
-
-  if (req.user.id !== +id) {
-    return next({ status: 403, message: "Forbidden" });
-  }
-
+router.delete("/me", authenticate, async (req, res, next) => {
   try {
     await prisma.user.delete({
-      where: { id: +id },
+      where: { id: req.user.id },
     });
     res.sendStatus(204);
   } catch (e) {
@@ -183,13 +165,8 @@ router.delete("/:id", authenticate, async (req, res, next) => {
   }
 });
 
-router.patch("/:id/password", authenticate, async (req, res, next) => {
-  const { id } = req.params;
+router.patch("/me/password", authenticate, async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
-
-  if (req.user.id !== +id) {
-    return next({ status: 403, message: "Forbidden" });
-  }
 
   if (!currentPassword || !newPassword) {
     return next({
@@ -200,7 +177,7 @@ router.patch("/:id/password", authenticate, async (req, res, next) => {
 
   try {
     const updatedUser = await prisma.user.updatePassword(
-      +id,
+      req.user.id,
       currentPassword,
       newPassword
     );

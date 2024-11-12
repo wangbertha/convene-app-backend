@@ -32,9 +32,6 @@ model User {
 
   notConnectToUsers   User[] @relation("NotConnectedUsers")
   notConnectFromUsers User[] @relation("NotConnectedUsers")
-
-  sentChats     Chat[] @relation("Sender")
-  receivedChats Chat[] @relation("Receiver")
 }
 
 model Interest {
@@ -58,16 +55,19 @@ model Event {
 }
 
 model Chat {
+  id        Int      @id @default(autoincrement())
+  members Int[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  messages  Message[] @relation("ChatMessages")
+}
+
+model Message {
   id Int @id @default(autoincrement())
-
-  sender   User @relation("Sender", fields: [senderId], references: [id])
-  senderId Int
-
-  receiver   User @relation("Receiver", fields: [receiverId], references: [id])
-  receiverId Int
-
-  content     String
-  createdAt   DateTime @default(now())
-  isRead      Boolean  @default(false)
-  messageType String
+  chat      Chat     @relation("ChatMessages", fields: [chatId], references: [id])
+  chatId    Int
+  senderId  Int
+  text String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
