@@ -49,7 +49,7 @@ router.get("/me", authenticate, async (req, res, next) => {
 });
 
 //get other user info
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   if (isNaN(id)) {
@@ -206,14 +206,14 @@ router.get("/me/interests", authenticate, async (req, res, next) => {
         interests: true,
       },
     });
-    res.json(myInterests);
+    res.json(myInterests.interests);
   } catch (e) {
     next(e);
   }
 });
 
 //GET other user interests
-router.get("/:id/interests", async (req, res, next) => {
+router.get("/:id/interests", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
   if (isNaN(id)) {
@@ -227,7 +227,7 @@ router.get("/:id/interests", async (req, res, next) => {
         interests: true,
       },
     });
-    res.json(userInterests);
+    res.json(userInterests.interests);
   } catch (e) {
     console.error(e);
     next(e);
