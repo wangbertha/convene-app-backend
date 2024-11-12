@@ -5,9 +5,9 @@ POST {{host}}/register
 Content-Type: application/json
 
 {
-  "email": "elwines444@gmail.com",
-  "password": "edwinC44@",
-  "firstname": "Oneida"
+  "email": "user@gmail.com",
+  "password": "User@123",
+  "firstname": "User New"
 }
 
 ### 2. Login User
@@ -16,8 +16,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
-  "email": "Oneida@gmail.com",
-  "password": "edwinC44@"
+  "email": "user@gmail.com",
+  "password": "User@123",
 }
 
 ### token 
