@@ -8,7 +8,7 @@ module.exports = router;
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-//get all users
+// GET all users
 router.get("/", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
@@ -28,7 +28,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-//get logged in user info
+// GET logged in user
 router.get("/me", authenticate, async (req, res, next) => {
   try {
     const user = await prisma.user.findUniqueOrThrow({
@@ -48,7 +48,7 @@ router.get("/me", authenticate, async (req, res, next) => {
   }
 });
 
-//get other user info
+// GET user by id
 router.get("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
 
@@ -75,7 +75,7 @@ router.get("/:id", authenticate, async (req, res, next) => {
   }
 });
 
-//update logged in user info
+// PATCH logged in user info
 router.patch("/me", authenticate, async (req, res, next) => {
   const {
     email,
@@ -94,8 +94,7 @@ router.patch("/me", authenticate, async (req, res, next) => {
     interestToDisconnect,
   } = req.body;
 
-  // email check validation
-
+  // Email check validation
   if (email !== undefined) {
     if (email.trim() === "") {
       return next({
@@ -116,7 +115,7 @@ router.patch("/me", authenticate, async (req, res, next) => {
     }
   }
 
-  // firstname check validation
+  // Firstname check validation
   if (firstname !== undefined) {
     if (firstname.trim() === "") {
       return next({
@@ -157,7 +156,7 @@ router.patch("/me", authenticate, async (req, res, next) => {
   }
 });
 
-//delete own profile
+// DELETE logged in user
 router.delete("/me", authenticate, async (req, res, next) => {
   try {
     await prisma.user.delete({
@@ -170,7 +169,7 @@ router.delete("/me", authenticate, async (req, res, next) => {
   }
 });
 
-//update password
+// PATCH password for logged in user
 router.patch("/me/password", authenticate, async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -197,7 +196,7 @@ router.patch("/me/password", authenticate, async (req, res, next) => {
   }
 });
 
-//GET logged in user interests for suggestion component
+// GET logged in user interests for suggestion component
 router.get("/me/interests", authenticate, async (req, res, next) => {
   try {
     const myInterests = prisma.user.findUniqueOrThrow({
@@ -212,7 +211,7 @@ router.get("/me/interests", authenticate, async (req, res, next) => {
   }
 });
 
-//GET other user interests
+// GET interests by user id
 router.get("/:id/interests", authenticate, async (req, res, next) => {
   const { id } = req.params;
 

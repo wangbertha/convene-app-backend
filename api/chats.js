@@ -5,7 +5,7 @@ module.exports = router;
 const prisma = require("../prisma");
 const { authenticate } = require("./auth");
 
-//Create a chat between 2 users
+// Create a chat between 2 users
 router.post("/", authenticate, async (req, res, next) => {
   const { firstId, secondId } = req.body;
   try {

@@ -14,7 +14,7 @@ app.use(cors({ origin: /localhost/ }));
 app.use(require("morgan")("dev"));
 app.use(express.json());
 
-//Setup express middleware
+// Endpoint routing middleware
 app.use(require("./api/auth").router);
 app.use("/interests", require("./api/interests"));
 app.use("/activities", require("./api/activities"));
@@ -22,17 +22,17 @@ app.use("/users", require("./api/users"));
 app.use("/chats", require("./api/chats"));
 app.use("/messages", require("./api/messages"));
 
+// Error-handling middleware
 app.use((req, res, next) => {
   next({ status: 404, message: "Endpoint not found." });
 });
-
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status ?? 500);
   res.json(err.message ?? "Sorry, something broke :(");
 });
 
-//Initialize socket.IO with server
+// Initialize socket.IO with server
 const io = initializeSocketIO(server);
 
 // Start server with socket.io
