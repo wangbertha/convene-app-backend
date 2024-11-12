@@ -16,7 +16,7 @@ Table User {
   lookingFor               string
   profileActive            boolean [default: true]
   interests                Interest[]
-  attendingEvents          Event[]
+  activities               Activity[]
   receivedChats            Chat[]    
   sentChats                Chat[]    
   connectToUsers           User[]    
@@ -31,35 +31,33 @@ Table Interest {
   users User[]
 }
 
-Table Event {
+Table Activity {
   id             int      [pk, increment] // Primary key, autoincrement
   name           string
   logo           string
-  startTime      datetime
-  endTime        datetime
-  venue          string
   summary        string
-  url            string [unique] // Unique URL
-  category       string
+  locations      string
+  urlResources   string [unique] // Unique URL
+  categories      string
   users User[]
 }
 
 Table Chat {
   id          int      [pk, increment] // Primary key, autoincrement
+  sender      User
   senderId    int
+  receiver    User   
   receiverId  int
   content     string
   createdAt   datetime  // Default current date/time
   isRead      boolean [default: false] // Default read status
   messageType string
-  receiver    User  
-  sender      User  
 }
 
 
 Ref: "User"."interests" <> "Interest"."users"
 
-Ref: "User"."attendingEvents" <> "Event"."users"
+Ref: "User"."activities" <> "Activity"."users"
 
 Ref: "Chat"."receiver" < "User"."receivedChats"
 
