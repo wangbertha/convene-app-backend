@@ -1,9 +1,7 @@
 const prisma = require("../prisma");
 const { faker } = require("@faker-js/faker");
 
-/**
- * Array of interests
- */
+// Array of interests
 const interests = [
   "Dance",
   "Gardening",
@@ -109,7 +107,7 @@ function getRandomFromDataBase(element, count) {
 }
 
 /**
- * Creates users and interests to seed the database
+ * Creates users, interests, and activities to seed the database
  * @param {number} numUsers
  */
 const seed = async (numUsers = 100) => {
@@ -150,13 +148,13 @@ const seed = async (numUsers = 100) => {
     });
   }
 
-  // get the recently created users from database
+  // Get the recently created users from database
   const usersInDataBase = await prisma.user.findMany();
 
-  //get the recently created activities from database
+  // Get the recently created activities from database
   const activitiesInDataBase = await prisma.activity.findMany();
 
-  // get the recently created from database
+  // Get the recently created from database
   const interestsInDataBase = await prisma.interest.findMany();
 
   // Connect random interests to each user
@@ -174,7 +172,7 @@ const seed = async (numUsers = 100) => {
     });
   }
 
-  //Connect random users to each activity
+  // Connect random users to each activity
   for (const activity of activitiesInDataBase) {
     const randomAttendees = getRandomFromDataBase(usersInDataBase, 10);
     await prisma.activity.update({

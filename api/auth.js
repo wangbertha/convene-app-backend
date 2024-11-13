@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+
 const prisma = require("../prisma");
 
-// import jwt and JWT_SECRET from .env
+// Import jwt and JWT_SECRET from .env
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// create token
+// Create token
 function createToken(id) {
   return jwt.sign({ id }, JWT_SECRET, { expiresIn: "1d" });
 }
@@ -14,7 +15,7 @@ function createToken(id) {
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// register new user
+// Register new user
 router.post("/register", async (req, res, next) => {
   const { email, password, firstname } = req.body;
   try {
@@ -52,7 +53,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-// login user
+// Login user
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -87,7 +88,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// token checking middleware
+// Token checking middleware
 router.use(async (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader?.slice(7);
@@ -108,7 +109,7 @@ router.use(async (req, res, next) => {
   }
 });
 
-// authenticate function that gets exported to routes
+// Authenticate function that gets exported to routes
 function authenticate(req, res, next) {
   if (req.user) {
     next();

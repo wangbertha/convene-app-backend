@@ -5,6 +5,7 @@ module.exports = router;
 const prisma = require("../prisma");
 const { authenticate } = require("./auth");
 
+// POST new message
 router.post("/", authenticate, async (req, res, next) => {
   const { chatId, senderId, text } = req.body;
 
@@ -28,6 +29,7 @@ router.post("/", authenticate, async (req, res, next) => {
   }
 });
 
+// GET messages by id
 router.get("/:id", authenticate, async (req, res, next) => {
   const { chatId } = req.params;
 

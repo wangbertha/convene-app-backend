@@ -5,40 +5,39 @@ module.exports = router;
 const prisma = require("../prisma");
 const { authenticate } = require("./auth");
 
-//get all events
+// GET all activities
 router.get("/", async (req, res, next) => {
   try {
-    const events = await prisma.activity.findMany({
+    const activities = await prisma.activity.findMany({
       include: { users: true },
     });
-    res.json(events);
+    res.json(activities);
   } catch (e) {
     next(e);
   }
 });
 
-//event:id routes
+// GET activity by id
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const event = await prisma.activity.findUniqueOrThrow({
+    const activity = await prisma.activity.findUniqueOrThrow({
       where: { id: +id },
       include: { users: true },
     });
-    res.json(event);
+    res.json(activity);
   } catch (e) {
     next(e);
   }
 });
-//AUTH update event:id (add attendees)
 
+// PATCH activity by id to connect or disconnect current user
 router.patch("/:id", authenticate, async (req, res, next) => {
   const { id } = req.params;
   const { saved } = req.body;
 
   try {
-    //const user = userId.map((id) => ({ id }));
-    const event = await prisma.activity.update({
+    const activity = await prisma.activity.update({
       where: {
         id: +id,
       },
@@ -56,29 +55,29 @@ router.patch("/:id", authenticate, async (req, res, next) => {
             },
       },
     });
-    res.status(201).json(event);
+    res.status(201).json(activity);
   } catch (e) {
     next(e);
   }
 });
 
-//remove current user from attendingUser
-router.delete("/:id/attendingUsers", authenticate, async (req, res, next) => {
+// DELETE current user from attendingUser
+router.delete("/:id/users", authenticate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const event = await prisma.activity.update({
+    const activity = await prisma.activity.update({
       where: {
         id: +id,
       },
       data: {
-        attendingUsers: {
+        users: {
           disconnect: {
             id: req.user.id,
           },
         },
       },
     });
-    res.status(200).json(event);
+    res.status(200).json(activity);
   } catch (e) {
     next(e);
   }
