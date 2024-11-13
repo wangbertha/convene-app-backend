@@ -8,8 +8,9 @@ const server = createServer(app);
 const PORT = 3000;
 
 // cors
+const URL = "https://convene-app.netlify.app/";
 const cors = require("cors");
-app.use(cors({ origin: /localhost/ }));
+app.use(cors({ origin: URL }));
 
 app.use(require("morgan")("dev"));
 app.use(express.json());
