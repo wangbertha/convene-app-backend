@@ -126,7 +126,7 @@ const seed = async (numUsers = 100) => {
     const firstname = faker.person.firstName();
     const lastname = faker.person.lastName();
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         firstname,
         lastname,
