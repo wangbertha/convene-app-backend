@@ -1,0 +1,83 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  password String [not null]
+  firstname String [not null]
+  lastname String
+  profilePicture String
+  bio String
+  city String
+  state String
+  age Int
+  gender String
+  genderPreference String
+  lookingFor String
+  profileActive Boolean [not null, default: true]
+  activities Activity [not null]
+  interests Interest [not null]
+  connectToUsers User [not null]
+  connectFromUsers User [not null]
+  notConnectToUsers User [not null]
+  notConnectFromUsers User [not null]
+}
+
+Table Interest {
+  id Int [pk, increment]
+  interest String [unique, not null]
+  users User [not null]
+}
+
+Table Activity {
+  id Int [pk, increment]
+  name String [not null]
+  logo String
+  summary String [not null]
+  locations String[] [not null]
+  urlResources String[] [not null]
+  categories String[] [not null]
+  users User [not null]
+}
+
+Table Chat {
+  id Int [pk, increment]
+  members Int[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  messages Message [not null]
+}
+
+Table Message {
+  id Int [pk, increment]
+  chat Chat [not null]
+  chatId Int [not null]
+  senderId Int [not null]
+  text String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table ActivityToUser {
+  activitiesId Int [ref: > Activity.id]
+  usersId Int [ref: > User.id]
+}
+
+Table InterestToUser {
+  interestsId Int [ref: > Interest.id]
+  usersId Int [ref: > User.id]
+}
+
+Table ConnectedUsers {
+  connecttousersId Int [ref: > User.id]
+  connectfromusersId Int [ref: > User.id]
+}
+
+Table NotConnectedUsers {
+  notconnecttousersId Int [ref: > User.id]
+  notconnectfromusersId Int [ref: > User.id]
+}
+
+Ref: Message.chatId > Chat.id
