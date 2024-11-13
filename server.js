@@ -8,7 +8,7 @@ const server = createServer(app);
 const PORT = 3000;
 
 // cors
-const URL = "https://convene-app.netlify.app/";
+const URL = "https://convene-app.netlify.app";
 const cors = require("cors");
 app.use(cors({ origin: URL }));
 
