@@ -33,7 +33,6 @@ The above diagram shows the various data tables and their relationships:
 ### User Routes
 
 User must be logged in for all routes:
-
 - `GET /users` sends array of all users in the database
 - `GET /me` sends currently logged-in user object with all information
 - `GET /users/:id` sends all information relating to a specific user, including likes, interests, and activities
@@ -43,4 +42,30 @@ User must be logged in for all routes:
     - Request body should include both the new and the old hashed password
 - `DELETE /me` allows the user to delete their own account
 
+### Interest Routes
 
+- `GET /interests` sends array of all interests a user can add to their profile
+- `POST /interests` allows a logged-in user to add a new interest to the table if it does not already exist
+
+### Activity Routes
+
+- `GET /activities` sends array of all currently available activity suggestions a user can add to their profile
+- `GET /activities/:id` sends all information relating to a specific activity
+- `PATCH /activities/:id` allows a logged-in user to add or remove an activity from their profile
+
+### Message Routes
+
+- `GET /messages/:id` sends all messages for a given chatId to a logged-in user
+- `POST /messages` saves all messages a logged-in user sends on the server
+    - each message request should contain the chatId, senderId, and text content
+    - allows for persistent messaging across browser sessions
+
+### Chat Routes
+
+User must be logged in for all routes:
+- `GET /chat/user-chats` sends all conversations the logged-in user is involved with
+    - used to show conversation list
+- `GET /chat/:id` sends the specific conversation bewtween the logged-in user and another user
+    - request body should include the logged-in userId and the target userId
+- `POST /chat` creates a new conversation between two users if one does not already exist
+    request body should include the logged-in userId and the target userId
