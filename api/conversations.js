@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const prisma = require("../prisma");
+const { authenticate } = require("./auth");
 
 // GET all conversations for a user
-router.get("/:userId", async (req, res, next) => {
+router.get("/:userId", authenticate, async (req, res, next) => {
   const userId = parseInt(req.params.userId); // Get userId from URL params
 
   try {

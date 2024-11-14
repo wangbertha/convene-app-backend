@@ -9,7 +9,7 @@ module.exports = router;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // GET all users
-router.get("/", async (req, res, next) => {
+router.get("/", authenticate, async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
       include: {
