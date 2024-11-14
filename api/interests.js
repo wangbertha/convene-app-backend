@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 module.exports = router;
-
 const prisma = require("../prisma");
+const { authenticate } = require("./auth");
 
 // GET all interests
 router.get("/", async (req, res, next) => {
@@ -15,7 +15,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // POST new interest
-router.post("/", async (req, res, next) => {
+router.post("/", authenticate, async (req, res, next) => {
     const { interest } = req.body;
     try {
         const newInterest = await prisma.interest.create({
