@@ -1,3 +1,46 @@
 # Convene App Backend
 
+Welcome to Convene, the newest app to find friends, that special someone, or a companion for a local event. Logged in users can add and edit information about themselves, add their interests, create a list of other liked users to connect with, one-to-one chat with other users, and add local activity types they might be interested in attending.
+
+This repo includes the backend code for running the chat server, creating the database, and serving the API for Convene.
+
+## Database
+
 ![alt schemaimage](./docs/convene_dbml.png)
+
+The above diagram shows the various data tables and their relationships:
+
+- User: stores all data related to the user profiles including login information, "likes", interests, and potential meetup activities
+
+- Interest: stores a list of potential interests or hobbies that users can add to their profile. Users may also add interests if they are not already in the table. Also stores a list of all users who have added that interest to their profile.
+
+- Activity: stores a list of activity suggestions for users to meet up (ex. hiking, getting coffee), as well as information to find out more about local options for that activity. Users are able to add activites they would be interested in to their profile. This table stores a list of all users who have added it.
+
+- Message: Stores messages between users. Allows for persistent messages between browser sessions.
+
+- Chat: Stores conversations between users, including all messages in the conversation. Allows persistent list of conversations for each user
+
+## API
+
+### Authentication Routes
+
+- `POST /register` creates a new User with provided inputs and sends a token
+    - Request body should include email, first name, and password
+    - Password will be hashed in the database
+- `POST /login` sends token if request credentials are correct
+    - Request body should include email and password
+
+### User Routes
+
+User must be logged in for all routes:
+
+- `GET /users` sends array of all users in the database
+- `GET /me` sends currently logged-in user object with all information
+- `GET /users/:id` sends all information relating to a specific user, including likes, interests, and activities
+- `PATCH /me` allows the user to change information about their own profile, except for the password
+    - Request body should include only the data to be changed about the user
+- `PATCH /me/password` allows the user to update their password
+    - Request body should include both the new and the old hashed password
+- `DELETE /me` allows the user to delete their own account
+
+
