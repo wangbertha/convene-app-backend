@@ -68,4 +68,4 @@ User must be logged in for all routes:
 - `GET /chat/:id` sends the specific conversation bewtween the logged-in user and another user
     - request body should include the logged-in userId and the target userId
 - `POST /chat` creates a new conversation between two users if one does not already exist
-    request body should include the logged-in userId and the target userId
+    - request body should include the logged-in userId and the target userId
