@@ -3,7 +3,7 @@ const { Server } = require("socket.io");
 function initializeSocketIO(server) {
   const io = new Server(server, {
     cors: {
-      origin: "https://convene-app.netlify.app",
+      origin: "http://localhost:5173",
       methods: ["GET", "POST"],
       allowedHeaders: ["Content-Type"],
       credentials: true,
