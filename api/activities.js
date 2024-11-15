@@ -60,25 +60,3 @@ router.patch("/:id", authenticate, async (req, res, next) => {
     next(e);
   }
 });
-
-// DELETE current user from attendingUser
-router.delete("/:id/users", authenticate, async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const activity = await prisma.activity.update({
-      where: {
-        id: +id,
-      },
-      data: {
-        users: {
-          disconnect: {
-            id: req.user.id,
-          },
-        },
-      },
-    });
-    res.status(200).json(activity);
-  } catch (e) {
-    next(e);
-  }
-});
