@@ -45,6 +45,7 @@ router.get("/user-chats", authenticate, async (req, res, next) => {
   }
 });
 
+// Gets a chat between 2 users
 router.get("/", authenticate, async (req, res, next) => {
   const { firstId, secondId } = req.body;
   try {
@@ -63,5 +64,20 @@ router.get("/", authenticate, async (req, res, next) => {
     res.status(200).json(existingChat);
   } catch (error) {
     next(error);
+  }
+});
+
+// DELETE logged in user
+router.delete("/:id", authenticate, async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.chat.delete({
+      where: { id: +id },
+    });
+    res.sendStatus(204);
+  } catch (e) {
+    console.error(e);
+    next(e);
   }
 });
