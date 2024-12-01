@@ -8,8 +8,9 @@ const { authenticate } = require("./auth");
 // GET all activities
 router.get("/", async (req, res, next) => {
   try {
+    const includeUsers = req.user ? true : false
     const activities = await prisma.activity.findMany({
-      include: { users: true },
+      include: { users: includeUsers },
     });
     res.json(activities);
   } catch (e) {
@@ -21,9 +22,10 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
+    const includeUsers = req.user ? true : false
     const activity = await prisma.activity.findUniqueOrThrow({
       where: { id: +id },
-      include: { users: true },
+      include: { users: includeUsers },
     });
     res.json(activity);
   } catch (e) {
