@@ -4,6 +4,34 @@ Welcome to Convene, the newest app to find friends, that special someone, or a c
 
 This repo includes the backend code for running the chat server, creating the database, and serving the API for Convene.
 
+## Getting Started
+
+### Set up the project locally
+
+1. Install Node.js and npm: [Downloading and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+2. Clone the repository locally: `git clone https://github.com/wangbertha/convene-app-frontend.git`
+3. Install dependencies: `npm install`
+
+### Set up the corresponding frontend
+
+1. Follow the Getting Started instructions in the [Convene App frontend repository](https://github.com/wangbertha/convene-app-frontend)
+
+### Set up a local database
+
+1. Install [PostgreSQL](https://www.postgresql.org/), keeping the post at the default 5432, and noting down your password for future commands when prompted
+2. Edit the `.env.example` file:
+    - Remove `.example` from the filename so it becomes `.env`
+    - Replace `[username]` and `[password]` with your PostgreSQL account information.
+    - Populate the value for `JWT_SECRET` with any random string. Ex. `JWT_SECRET="ASD34LHIjaestl24ihv409H873wv#542"`
+3. Create and seed the database:
+    `npx prisma migrate reset`
+4. Check the data and its contents. There should be 7 Activities, 0 Chat, 25 Interests, 0 Message, and 100 Users. The following command will open in your browser under port 5555:
+    `npx prisma studio`
+
+### Run the project locally
+
+1. Run the project locally: `npm run dev`
+
 ## Database
 
 ![alt schemaimage](./docs/convene_dbml.png)

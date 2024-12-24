@@ -80,4 +80,4 @@ Table NotConnectedUsers {
   notconnectfromusersId Int [ref: > User.id]
 }
 
-Ref: Message.chatId > Chat.id
+Ref: Message.chatId > Chat.id [delete: Cascade]
